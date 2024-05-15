@@ -1,0 +1,29 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:latest
+    restart: always
+    environment:
+      - POSTGRES_USER=test
+      - POSTGRES_PASSWORD=test
+    volumes:
+      - postgres:/var/lib/postgresql/data
+    ports:
+      - '5432:5432'
+  backend:
+    build:
+      context: .
+      target: dev
+    restart: always
+    env_file:
+      - .env
+    ports:
+      - '3001:3001'
+    volumes:
+      - .:/usr/src/app
+    depends_on:
+      - postgres
+
+volumes:
+  postgres:
